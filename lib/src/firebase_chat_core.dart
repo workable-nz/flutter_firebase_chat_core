@@ -215,9 +215,13 @@ class FirebaseChatCore {
       messageMap['authorId'] = firebaseUser!.uid;
       messageMap['createdAt'] = FieldValue.serverTimestamp();
 
-      await FirebaseFirestore.instance
+      var createdMessage = await FirebaseFirestore.instance
           .collection('rooms/$roomId/messages')
           .add(messageMap);
+      await FirebaseFirestore.instance.doc('rooms/$roomId').update({
+        'metadata.lastMessage': messageMap,
+        'metadata.lastMessageId': createdMessage.id,
+      });
     }
   }
 
