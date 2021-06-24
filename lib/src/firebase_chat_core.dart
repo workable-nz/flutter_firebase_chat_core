@@ -221,6 +221,7 @@ class FirebaseChatCore {
       await FirebaseFirestore.instance.doc('rooms/$roomId').update({
         'metadata.lastMessage': messageMap,
         'metadata.lastMessageId': createdMessage.id,
+        'metadata.lastMessageNotified': false,
       });
     }
   }
