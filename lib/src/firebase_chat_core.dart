@@ -175,6 +175,18 @@ class FirebaseChatCore {
         .asyncMap((query) => processRoomsQuery(firebaseUser!, query));
   }
 
+  /// Returns the rooms from Firebase. Only rooms where current
+  /// logged in user exist are returned.
+  Future<List<types.Room>> getRooms() async {
+    if (firebaseUser == null) return [];
+
+    return FirebaseFirestore.instance
+        .collection('rooms')
+        .where('userIds', arrayContains: firebaseUser!.uid)
+        .get(const GetOptions(source: Source.server))
+        .then((query) => processRoomsQuery(firebaseUser!, query));
+  }
+
   /// Sends a message to the Firestore. Accepts any partial message and a
   /// room ID. If arbitraty data is provided in the [partialMessage]
   /// does nothing.
